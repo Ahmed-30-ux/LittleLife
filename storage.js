@@ -12,16 +12,18 @@ async function getStorage() {
   if (store) return store;
   const isVercel = !!process.env.VERCEL;
   if (isVercel) {
-    const { kv } = await import('@vercel/kv');
+    const { put, get } = await import('@vercel/blob');
+    const BLOB_KEY = 'data.json';
     store = {
       async load() {
         try {
-          const data = await kv.get('little-life-data');
-          return data || getDefaultData();
+          const blob = await get(BLOB_KEY);
+          if (!blob) return getDefaultData();
+          return JSON.parse(await blob.text());
         } catch { return getDefaultData(); }
       },
       async save(data) {
-        await kv.set('little-life-data', data);
+        await put(BLOB_KEY, JSON.stringify(data), { contentType: 'application/json', access: 'private' });
       }
     };
   } else {
