@@ -1,4 +1,3 @@
-// Storage abstraction — works locally with data.json, on Netlify with Blobs
 let store = null;
 
 function getDefaultData() {
@@ -11,19 +10,18 @@ function getDefaultData() {
 
 async function getStorage() {
   if (store) return store;
-  const isNetlify = !!process.env.NETLIFY || !!process.env.AWS_LAMBDA_FUNCTION_NAME;
-  if (isNetlify) {
-    const { getStore } = await import('@netlify/blobs');
-    const blobStore = getStore('little-life-data');
+  const isVercel = !!process.env.VERCEL;
+  if (isVercel) {
+    const { kv } = await import('@vercel/kv');
     store = {
       async load() {
         try {
-          const data = await blobStore.get('main', { type: 'json' });
+          const data = await kv.get('little-life-data');
           return data || getDefaultData();
         } catch { return getDefaultData(); }
       },
       async save(data) {
-        await blobStore.setJSON('main', data);
+        await kv.set('little-life-data', data);
       }
     };
   } else {
