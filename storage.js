@@ -11,7 +11,7 @@ function getDefaultData() {
 
 async function getStorage() {
   if (store) return store;
-  const isNetlify = !!process.env.NETLIFY;
+  const isNetlify = !!process.env.NETLIFY || !!process.env.AWS_LAMBDA_FUNCTION_NAME;
   if (isNetlify) {
     const { getStore } = await import('@netlify/blobs');
     const blobStore = getStore('little-life-data');
