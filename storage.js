@@ -11,7 +11,7 @@ function getDefaultData() {
 async function getStorage() {
   if (store) return store;
 
-  if (process.env.VERCEL && process.env.BLOB_READ_WRITE_TOKEN) {
+  if (process.env.VERCEL && (process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID)) {
     const { put, head } = require('@vercel/blob');
     const KEY = 'data.json';
     store = {
