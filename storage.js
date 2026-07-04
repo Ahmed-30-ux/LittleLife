@@ -17,7 +17,7 @@ async function getStorage() {
     store = {
       async load() {
         try {
-          const blob = await get(KEY);
+          const blob = await get(KEY, { access: 'public' });
           return blob ? JSON.parse(await blob.text()) : getDefaultData();
         } catch { return getDefaultData(); }
       },
