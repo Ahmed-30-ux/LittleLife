@@ -1,0 +1,1617 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>Little Life</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:opsz,wght@14..32,300..700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fdf8f5;--surface:#fff;--surface2:#faf1ec;--border:#f0e3da;--text:#3d2c25;--text2:#7a6458;--text3:#b8a69b;--primary:#e89c86;--primary2:#d47a60;--accent:#f5d6c8;--accent2:#fae9df;--shadow:0 2px 12px rgba(61,44,37,.08);--radius:16px;--radius-sm:10px;--font-serif:'DM Serif Display',Georgia,serif;--font-sans:'Inter',system-ui,-apple-system,sans-serif;--transition:.2s ease;--nav-bg:#fff;--fab-bg:#e89c86;--fab-icon:#fff;--card-hover:rgba(232,156,134,.06);--mood-bg:#faf1ec;--wave-color:#e89c86;--wave-progress:#d47a60}
+[data-theme=dark]{--bg:#1a1412;--surface:#241e1b;--surface2:#2d2521;--border:#3d322c;--text:#ede0d9;--text2:#b8a69b;--text3:#7a6458;--primary:#e89c86;--primary2:#f0b8a6;--accent:#3d2c25;--accent2:#2d2521;--shadow:0 2px 12px rgba(0,0,0,.3);--nav-bg:#1a1412;--fab-bg:#e89c86;--fab-icon:#1a1412;--card-hover:rgba(232,156,134,.1);--mood-bg:#2d2521;--wave-color:#e89c86;--wave-progress:#f0b8a6}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;-webkit-text-size-adjust:100%}
+body{font-family:var(--font-sans);background:var(--bg);color:var(--text);line-height:1.6;padding-bottom:90px;min-height:100vh;transition:background var(--transition),color var(--transition)}
+a{color:var(--primary2);text-decoration:none}
+img{max-width:100%;display:block;border-radius:var(--radius-sm)}
+button{cursor:pointer;font-family:inherit;border:none;background:none;font-size:inherit;color:inherit}
+input,textarea,select{font-family:inherit;font-size:inherit;color:inherit;background:var(--surface);border:2px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;width:100%;transition:border-color var(--transition)}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--primary)}
+textarea{resize:vertical;min-height:70px}
+select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%237a6458' d='M6 8L0 0h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px}
+h1,h2,h3{font-family:var(--font-serif);font-weight:400;line-height:1.3}
+h2{font-size:1.4rem;margin-bottom:16px;color:var(--text)}
+h3{font-size:1.15rem;margin-bottom:10px;color:var(--text)}
+.container{max-width:740px;margin:0 auto;padding:0 16px}
+header{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;padding:12px 0;transition:background var(--transition)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.header-left{display:flex;align-items:center;gap:12px}
+.logo{font-family:var(--font-serif);font-size:1.5rem;color:var(--primary);white-space:nowrap}
+.logo-sm{font-family:var(--font-serif);font-size:1.8rem;color:var(--primary)}
+.kid-select{max-width:160px;padding:6px 30px 6px 10px;font-size:.85rem;border-radius:20px;border-color:var(--border);background:var(--surface2)}
+.nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:var(--nav-bg);border-top:1px solid var(--border);padding:6px 0 max(6px,env(safe-area-inset-bottom));transition:background var(--transition)}
+.nav-inner{display:flex;overflow-x:auto;gap:2px;max-width:740px;margin:0 auto;padding:0 8px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 8px;border-radius:10px;font-size:.62rem;white-space:nowrap;color:var(--text3);transition:color var(--transition);flex-shrink:0;min-width:52px}
+.nav-item.active{color:var(--primary)}
+.nav-item .nav-icon{font-size:1.15rem;line-height:1}
+.nav-item .nav-label{font-size:.58rem;line-height:1.2}
+.nav-item:hover{color:var(--primary)}
+.page{display:none;padding-top:20px}
+.page.active{display:block}
+.card{background:var(--surface);border-radius:var(--radius);padding:20px;margin-bottom:16px;box-shadow:var(--shadow);transition:background var(--transition),box-shadow var(--transition)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 20px;border-radius:var(--radius-sm);font-weight:500;font-size:.9rem;transition:all var(--transition)}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary2)}
+.btn-outline{background:transparent;border:2px solid var(--border);color:var(--text2)}
+.btn-outline:hover{border-color:var(--primary);color:var(--primary)}
+.btn-sm{padding:6px 12px;font-size:.8rem}
+.btn-danger{background:#e74c3c;color:#fff;border:none}
+.btn-danger:hover{background:#c0392b}
+.btn-ghost{background:transparent;color:var(--text2);padding:6px 10px}
+.btn-ghost:hover{color:var(--primary)}
+.btn-icon{width:36px;height:36px;padding:0;border-radius:50%;display:inline-flex;align-items:center;justify-content:center}
+.fab{position:fixed;bottom:80px;right:20px;width:56px;height:56px;border-radius:50%;background:var(--fab-bg);color:var(--fab-icon);box-shadow:0 4px 16px rgba(232,156,134,.4);display:flex;align-items:center;justify-content:center;font-size:1.5rem;z-index:90;transition:transform var(--transition),opacity var(--transition)}
+.fab:hover{transform:scale(1.08)}
+.fab.hidden{opacity:0;pointer-events:none}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px}
+.emoji-picker{display:flex;gap:8px;flex-wrap:wrap}
+.emoji-picker button{font-size:2rem;padding:6px 10px;border-radius:var(--radius-sm);transition:all var(--transition);background:var(--surface2);border:2px solid transparent}
+.emoji-picker button.selected{border-color:var(--primary);background:var(--accent2);transform:scale(1.1)}
+.emoji-picker button:hover{background:var(--accent2)}
+.tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.75rem;background:var(--accent2);color:var(--text2);margin:2px}
+.tag-clickable{cursor:pointer;transition:all var(--transition)}
+.tag-clickable:hover{background:var(--primary);color:#fff}
+.tag-clickable.active{background:var(--primary);color:#fff}
+.empty-state{text-align:center;padding:40px 20px;color:var(--text3)}
+.empty-state .empty-icon{font-size:3rem;margin-bottom:12px}
+.empty-state p{font-size:.9rem}
+.dash-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.dash-card{background:var(--surface2);border-radius:var(--radius-sm);padding:14px;text-align:center;cursor:pointer;transition:all var(--transition)}
+.dash-card:hover{background:var(--accent2);transform:translateY(-2px)}
+.dash-card .dash-num{font-family:var(--font-serif);font-size:1.8rem;color:var(--primary);line-height:1.2}
+.dash-card .dash-label{font-size:.7rem;color:var(--text2);margin-top:2px}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity var(--transition)}
+.modal-overlay.open{opacity:1;pointer-events:auto}
+.modal{background:var(--surface);border-radius:var(--radius);padding:24px;max-width:500px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.2)}
+.modal h2{margin-bottom:16px}
+.modal-close{float:right;font-size:1.5rem;color:var(--text3);cursor:pointer;line-height:1}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.85rem;color:var(--text2);margin-bottom:4px;font-weight:500}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:10px 24px;border-radius:30px;font-size:.85rem;z-index:300;opacity:0;pointer-events:none;transition:opacity var(--transition);white-space:nowrap;max-width:90vw;overflow:hidden;text-overflow:ellipsis}
+.toast.show{opacity:1}
+.waveform{display:flex;align-items:flex-end;gap:2px;height:40px;padding:4px 0}
+.waveform .bar{width:4px;border-radius:2px;background:var(--wave-color);transition:height .1s;min-height:2px}
+.waveform .bar.active{background:var(--wave-progress)}
+.word-cloud{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:10px 0}
+.word-cloud span{cursor:pointer;padding:4px 12px;border-radius:20px;background:var(--accent2);transition:all var(--transition)}
+.word-cloud span:hover{background:var(--primary);color:#fff}
+.echo-entry{padding:14px;border-bottom:1px solid var(--border);cursor:pointer;transition:background var(--transition)}
+.echo-entry:hover{background:var(--card-hover)}
+.echo-entry:last-child{border-bottom:none}
+.echo-date{font-size:.75rem;color:var(--text3)}
+.echo-text{font-size:.9rem;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.echo-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.echo-player{display:flex;align-items:center;gap:12px;padding:12px;background:var(--surface2);border-radius:var(--radius-sm);margin-top:10px}
+.echo-player .play-btn{width:40px;height:40px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.echo-player .play-btn:hover{background:var(--primary2)}
+.mouth-diagram{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;max-width:320px;margin:16px auto}
+.tooth{aspect-ratio:1;border-radius:6px;border:2px solid var(--border);background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:.7rem;cursor:pointer;transition:all var(--transition);text-align:center;line-height:1.2;padding:2px}
+.tooth:hover{border-color:var(--primary)}
+.tooth.erupted{background:var(--primary);color:#fff;border-color:var(--primary)}
+.tooth.missing{background:var(--border);color:var(--text3);border-color:var(--border);opacity:.5}
+.tooth.selected{border-color:var(--primary2);box-shadow:0 0 0 3px var(--accent)}
+.masonry{columns:2;column-gap:12px}
+.masonry-item{break-inside:avoid;margin-bottom:12px;border-radius:var(--radius-sm);overflow:hidden;position:relative;background:var(--surface2)}
+.masonry-item img{width:100%;display:block}
+.masonry-item .caption{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.6));color:#fff;padding:20px 10px 8px;font-size:.8rem}
+.age-badge{position:absolute;top:8px;right:8px;background:var(--primary);color:#fff;font-size:.65rem;padding:2px 8px;border-radius:12px;font-weight:500}
+.timeline-item{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--border)}
+.timeline-item:last-child{border-bottom:none}
+.timeline-icon{font-size:1.5rem;flex-shrink:0;width:40px;text-align:center}
+.vaccine-group{margin-bottom:16px}
+.vaccine-group h4{font-size:.9rem;margin-bottom:8px;color:var(--text2)}
+.vaccine-item{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--surface2);border-radius:var(--radius-sm);margin-bottom:6px}
+.vaccine-item input[type=checkbox]{width:18px;height:18px;accent-color:var(--primary);cursor:pointer}
+.vaccine-item label{font-size:.85rem;cursor:pointer;flex:1}
+.vaccine-item .vaccine-dose{font-size:.75rem;color:var(--text3)}
+.share-link-card{background:var(--surface2);border-radius:var(--radius-sm);padding:14px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.share-link-card .link-url{font-size:.75rem;color:var(--text2);word-break:break-all;flex:1}
+.settings-item{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)}
+.settings-item:last-child{border-bottom:none}
+.toggle{position:relative;width:48px;height:26px;background:var(--border);border-radius:13px;cursor:pointer;transition:background var(--transition)}
+.toggle.active{background:var(--primary)}
+.toggle::after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform var(--transition)}
+.toggle.active::after{transform:translateX(22px)}
+.fam-item{padding:10px 12px;background:var(--surface2);border-radius:var(--radius-sm);margin-bottom:8px}
+.fam-item .fam-role{font-size:.75rem;color:var(--text3)}
+.fam-item .fam-link{font-size:.75rem;color:var(--primary);word-break:break-all}
+
+/* Auth */
+.auth-overlay{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:var(--bg);padding:20px}
+.auth-overlay.hidden{display:none}
+.auth-box{max-width:400px;width:100%;text-align:center}
+.auth-box .logo{font-size:2.5rem;margin-bottom:4px}
+.auth-box .tagline{color:var(--text2);font-size:.95rem;margin-bottom:24px}
+.auth-tabs{display:flex;gap:0;margin-bottom:20px;background:var(--surface2);border-radius:var(--radius-sm);padding:4px}
+.auth-tab{flex:1;padding:8px;text-align:center;border-radius:8px;font-size:.85rem;font-weight:500;color:var(--text2);transition:all var(--transition);cursor:pointer}
+.auth-tab.active{background:var(--surface);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.auth-form{display:none;text-align:left}
+.auth-form.active{display:block}
+.auth-form .btn{width:100%;margin-top:8px}
+.auth-error{background:#fef2f2;color:#dc2626;padding:8px 12px;border-radius:8px;font-size:.8rem;margin-bottom:12px;display:none}
+[data-theme=dark] .auth-error{background:#3d1c1c;color:#fca5a5}
+.auth-success{background:#f0fdf4;color:#16a34a;padding:8px 12px;border-radius:8px;font-size:.8rem;margin-bottom:12px;display:none}
+[data-theme=dark] .auth-success{background:#1a3d1a;color:#86efac}
+.user-info{display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--text2)}
+.user-info .user-name{max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* Achievements */
+.ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:12px}
+.ach-card{background:var(--surface2);border-radius:var(--radius-sm);padding:16px;text-align:center;transition:all var(--transition)}
+.ach-card.earned{background:var(--accent2);border:2px solid var(--primary)}
+.ach-card.locked{opacity:.5;filter:grayscale(.6)}
+.ach-card.locked .ach-icon{filter:grayscale(1)}
+.ach-icon{font-size:2rem;margin-bottom:6px}
+.ach-label{font-size:.8rem;font-weight:600;color:var(--text);margin-bottom:2px}
+.ach-desc{font-size:.7rem;color:var(--text3)}
+.ach-progress{margin-top:16px;text-align:center;font-size:.85rem;color:var(--text2)}
+
+@keyframes pulse-glow{0%,100%{box-shadow:0 0 0 0 rgba(232,156,134,.4)}50%{box-shadow:0 0 0 8px rgba(232,156,134,0)}}
+.ach-new{animation:pulse-glow 1.5s ease-in-out 3}
+
+@media(max-width:480px){.dash-cards{grid-template-columns:1fr 1fr}.grid-2{grid-template-columns:1fr}.form-row{grid-template-columns:1fr}.masonry{columns:1}.nav-item{min-width:44px;padding:4px 5px}.nav-item .nav-label{font-size:.52rem}.ach-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}}
+@media(min-width:481px){.masonry{columns:2}}
+</style>
+</head>
+<body>
+
+<!-- Auth Overlay -->
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-box">
+    <div class="logo">Little Life</div>
+    <p class="tagline">Your baby's journey, beautifully captured</p>
+    <div class="auth-tabs">
+      <div class="auth-tab active" onclick="switchAuthTab('login')">Sign In</div>
+      <div class="auth-tab" onclick="switchAuthTab('signup')">Sign Up</div>
+    </div>
+    <div id="authError" class="auth-error"></div>
+    <div id="authSuccess" class="auth-success"></div>
+    <!-- Login -->
+    <form class="auth-form active" id="loginForm" onsubmit="event.preventDefault();doLogin()">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="loginEmail" placeholder="your@email.com" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="Password" required autocomplete="current-password">
+      </div>
+      <button class="btn btn-primary" type="submit">Sign In</button>
+    </form>
+    <!-- Signup -->
+    <form class="auth-form" id="signupForm" onsubmit="event.preventDefault();doSignup()">
+      <div class="form-group">
+        <label>Your Name</label>
+        <input type="text" id="signupName" placeholder="Your name" required>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="signupEmail" placeholder="your@email.com" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="signupPassword" placeholder="Min 6 characters" required minlength="6" autocomplete="new-password">
+      </div>
+      <button class="btn btn-primary" type="submit">Create Account</button>
+    </form>
+  </div>
+</div>
+
+<header>
+<div class="container header-inner">
+<div class="header-left">
+<div class="logo">Little Life</div>
+<select class="kid-select" id="kidSelect" onchange="switchKid(this.value)">
+<option value="">Select child...</option>
+</select>
+</div>
+<div style="display:flex;align-items:center;gap:8px">
+  <div class="user-info" id="userInfo" style="display:none">
+    <span class="user-name" id="userNameDisplay"></span>
+    <button class="btn btn-ghost btn-sm" onclick="doLogout()" title="Sign out">🚪</button>
+  </div>
+  <button class="btn btn-sm btn-outline" onclick="toggleSettings()" title="Settings">⚙️</button>
+  <button class="btn btn-sm btn-outline" onclick="toggleTheme()" title="Toggle dark mode">🌓</button>
+</div>
+</div>
+</header>
+
+<nav class="nav">
+<div class="nav-inner" id="navTabs">
+<div class="nav-item active" data-tab="dashboard" onclick="switchTab('dashboard')"><span class="nav-icon">📊</span><span class="nav-label">Home</span></div>
+<div class="nav-item" data-tab="echo" onclick="switchTab('echo')"><span class="nav-icon">🎙️</span><span class="nav-label">Echo</span></div>
+<div class="nav-item" data-tab="daily" onclick="switchTab('daily')"><span class="nav-icon">📝</span><span class="nav-label">Daily</span></div>
+<div class="nav-item" data-tab="growth" onclick="switchTab('growth')"><span class="nav-icon">📏</span><span class="nav-label">Growth</span></div>
+<div class="nav-item" data-tab="teeth" onclick="switchTab('teeth')"><span class="nav-icon">🦷</span><span class="nav-label">Teeth</span></div>
+<div class="nav-item" data-tab="photos" onclick="switchTab('photos')"><span class="nav-icon">📸</span><span class="nav-label">Photos</span></div>
+<div class="nav-item" data-tab="art" onclick="switchTab('art')"><span class="nav-icon">🎨</span><span class="nav-label">Art</span></div>
+<div class="nav-item" data-tab="reading" onclick="switchTab('reading')"><span class="nav-icon">📚</span><span class="nav-label">Reading</span></div>
+<div class="nav-item" data-tab="medical" onclick="switchTab('medical')"><span class="nav-icon">🏥</span><span class="nav-label">Medical</span></div>
+<div class="nav-item" data-tab="milestones" onclick="switchTab('milestones')"><span class="nav-icon">👶</span><span class="nav-label">Milestones</span></div>
+<div class="nav-item" data-tab="achievements" onclick="switchTab('achievements')"><span class="nav-icon">🏆</span><span class="nav-label">Awards</span></div>
+<div class="nav-item" data-tab="family" onclick="switchTab('family')"><span class="nav-icon">👨‍👩‍👧</span><span class="nav-label">Family</span></div>
+</div>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<button class="fab" id="fabRecord" onclick="openEchoRecorder()">🎙️</button>
+
+<div class="container">
+
+<!-- DASHBOARD -->
+<div class="page active" id="page-dashboard">
+<h2>📊 Dashboard</h2>
+<div id="dashContent"><div class="empty-state"><div class="empty-icon">👶</div><p>Select a child to see their dashboard</p></div></div>
+</div>
+
+<!-- ECHO -->
+<div class="page" id="page-echo">
+<h2>🎙️ Echo Voice Diary</h2>
+<div id="echoContent"></div>
+</div>
+
+<!-- DAILY LOG -->
+<div class="page" id="page-daily">
+<h2>📝 Daily Log</h2>
+<div id="dailyContent"></div>
+</div>
+
+<!-- GROWTH -->
+<div class="page" id="page-growth">
+<h2>📏 Growth Tracking</h2>
+<div id="growthContent"></div>
+</div>
+
+<!-- TEETH -->
+<div class="page" id="page-teeth">
+<h2>🦷 Teeth Tracker</h2>
+<div id="teethContent"></div>
+</div>
+
+<!-- PHOTOS -->
+<div class="page" id="page-photos">
+<h2>📸 Photo Gallery</h2>
+<div id="photosContent"></div>
+</div>
+
+<!-- ART GALLERY -->
+<div class="page" id="page-art">
+<h2>🎨 Art Gallery</h2>
+<div id="artContent"></div>
+</div>
+
+<!-- READING LOG -->
+<div class="page" id="page-reading">
+<h2>📚 Reading Log</h2>
+<div id="readingContent"></div>
+</div>
+
+<!-- MEDICAL -->
+<div class="page" id="page-medical">
+<h2>🏥 Medical Records</h2>
+<div id="medicalContent"></div>
+</div>
+
+<!-- MILESTONES -->
+<div class="page" id="page-milestones">
+<h2>👶 Milestones</h2>
+<div id="milestonesContent"></div>
+</div>
+
+<!-- ACHIEVEMENTS -->
+<div class="page" id="page-achievements">
+<h2>🏆 Achievements</h2>
+<div id="achievementsContent"></div>
+</div>
+
+<!-- FAMILY CIRCLE -->
+<div class="page" id="page-family">
+<h2>👨‍👩‍👧 Family Circle</h2>
+<div id="familyContent"></div>
+</div>
+
+</div>
+
+<!-- Settings Modal -->
+<div class="modal-overlay" id="settingsModal">
+<div class="modal">
+<span class="modal-close" onclick="toggleSettings()">&times;</span>
+<h2>⚙️ Settings</h2>
+<div class="settings-item">
+<span>Dark Mode</span>
+<div class="toggle" id="themeToggle" onclick="toggleTheme()"></div>
+</div>
+<div class="settings-item">
+<span>Export Data</span>
+<button class="btn btn-sm btn-outline" onclick="exportData()">📥 Export</button>
+</div>
+<div class="settings-item">
+<span>Account</span>
+<button class="btn btn-sm btn-outline" onclick="doLogout()">🚪 Sign Out</button>
+</div>
+<div class="form-group" style="margin-top:16px">
+<label>Add / Edit Child</label>
+<div style="display:flex;gap:8px">
+<input type="text" id="kidNameInput" placeholder="Child's name" style="flex:1">
+<input type="date" id="kidDobInput">
+<button class="btn btn-primary btn-sm" onclick="saveKid()">Save</button>
+</div>
+<select id="editKidSelect" style="margin-top:8px" onchange="populateKidEdit()">
+<option value="">Edit existing...</option>
+</select>
+</div>
+<div id="kidList" style="margin-top:8px"></div>
+</div>
+</div>
+
+<!-- Echo Recorder Modal -->
+<div class="modal-overlay" id="echoRecorderModal">
+<div class="modal">
+<span class="modal-close" onclick="closeEchoRecorder()">&times;</span>
+<h2>🎙️ New Recording</h2>
+<div id="recorderUI">
+<div style="text-align:center;padding:20px">
+<div id="recordingTimer" style="font-size:2rem;font-family:var(--font-serif);color:var(--primary);margin-bottom:12px">0:00</div>
+<div class="waveform" id="recordingWave"></div>
+<button class="btn btn-primary" id="recordToggleBtn" onclick="toggleRecording()" style="font-size:1.2rem;padding:16px 32px;margin-top:12px">🔴 Start Recording</button>
+</div>
+</div>
+<div id="postRecordingUI" style="display:none">
+<div class="form-group">
+<label>Transcript</label>
+<textarea id="echoTranscript" rows="3" placeholder="What did baby say?"></textarea>
+</div>
+<div class="form-group">
+<label>Tags</label>
+<input id="echoTags" placeholder="e.g. first-word, baba, mama">
+</div>
+<div class="form-group">
+<label>Photo (optional)</label>
+<input type="file" id="echoPhoto" accept="image/*">
+</div>
+<div class="form-group">
+<label>Favorite</label>
+<label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+<input type="checkbox" id="echoFavorite"> 💖 Mark as favorite
+</label>
+</div>
+<div class="form-actions">
+<button class="btn btn-primary" onclick="saveEcho()">💾 Save</button>
+<button class="btn btn-outline" onclick="discardEcho()">Discard</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Echo Detail Modal -->
+<div class="modal-overlay" id="echoDetailModal">
+<div class="modal">
+<span class="modal-close" onclick="closeEchoDetail()">&times;</span>
+<div id="echoDetailContent"></div>
+</div>
+</div>
+
+<!-- Photo Upload Modal -->
+<div class="modal-overlay" id="photoUploadModal">
+<div class="modal">
+<span class="modal-close" onclick="closePhotoUpload()">&times;</span>
+<h2>📸 Upload Photo</h2>
+<div class="form-group">
+<label>Photo</label>
+<input type="file" id="photoInput" accept="image/*">
+</div>
+<div class="form-group">
+<label>Caption</label>
+<input id="photoCaption" placeholder="Say something about this moment...">
+</div>
+<div class="form-actions">
+<button class="btn btn-primary" onclick="uploadPhoto()">Upload</button>
+<button class="btn btn-outline" onclick="closePhotoUpload()">Cancel</button>
+</div>
+</div>
+</div>
+
+<!-- Art Upload Modal -->
+<div class="modal-overlay" id="artUploadModal">
+<div class="modal">
+<span class="modal-close" onclick="closeArtUpload()">&times;</span>
+<h2>🎨 Add Artwork</h2>
+<div class="form-group">
+<label>Artwork Image</label>
+<input type="file" id="artInput" accept="image/*">
+</div>
+<div class="form-group">
+<label>Title</label>
+<input id="artTitle" placeholder="Artwork title">
+</div>
+<div class="form-group">
+<label>Description</label>
+<textarea id="artDesc" rows="2" placeholder="Tell us about this piece..."></textarea>
+</div>
+<div class="form-actions">
+<button class="btn btn-primary" onclick="uploadArt()">Save</button>
+<button class="btn btn-outline" onclick="closeArtUpload()">Cancel</button>
+</div>
+</div>
+</div>
+
+<!-- Reading Log Modal -->
+<div class="modal-overlay" id="readingModal">
+<div class="modal">
+<span class="modal-close" onclick="closeReadingModal()">&times;</span>
+<h2>📚 Add Reading</h2>
+<div class="form-group">
+<label>Book Title</label>
+<input id="readingTitle" placeholder="Book title">
+</div>
+<div class="form-group">
+<label>Author</label>
+<input id="readingAuthor" placeholder="Author name">
+</div>
+<div class="form-row">
+<div class="form-group">
+<label>Date Read</label>
+<input type="date" id="readingDate">
+</div>
+<div class="form-group">
+<label>Reaction</label>
+<div class="emoji-picker" id="readingReactionPicker">
+<button onclick="selectReadingEmoji('😍')">😍</button>
+<button onclick="selectReadingEmoji('😊')">😊</button>
+<button onclick="selectReadingEmoji('😐')">😐</button>
+<button onclick="selectReadingEmoji('😴')">😴</button>
+</div>
+</div>
+</div>
+<div class="form-group">
+<label>Notes</label>
+<textarea id="readingNotes" rows="2"></textarea>
+</div>
+<div class="form-group">
+<label>Record Audio Reading (optional)</label>
+<div style="display:flex;gap:8px;align-items:center">
+<button class="btn btn-sm btn-outline" id="readingRecBtn" onclick="toggleReadingRec()">🎤 Record</button>
+<span id="readingRecStatus" style="font-size:.8rem;color:var(--text3)"></span>
+</div>
+</div>
+<div class="form-actions">
+<button class="btn btn-primary" onclick="saveReading()">💾 Save</button>
+<button class="btn btn-outline" onclick="closeReadingModal()">Cancel</button>
+</div>
+</div>
+</div>
+
+<!-- Vaccine & Visit Modals -->
+<div class="modal-overlay" id="vaccineModal">
+<div class="modal">
+<span class="modal-close" onclick="closeVaccineModal()">&times;</span>
+<h2>💉 Vaccination Schedule</h2>
+<div id="vaccineContent"></div>
+<div class="form-actions"><button class="btn btn-primary" onclick="closeVaccineModal()">Done</button></div>
+</div>
+</div>
+
+<div class="modal-overlay" id="visitModal">
+<div class="modal">
+<span class="modal-close" onclick="closeVisitModal()">&times;</span>
+<h2>🏥 Add Doctor Visit</h2>
+<div class="form-group"><label>Visit Date</label><input type="date" id="visitDate"></div>
+<div class="form-group"><label>Doctor / Facility</label><input id="visitDoctor" placeholder="Dr. name or hospital"></div>
+<div class="form-group"><label>Reason</label><input id="visitReason" placeholder="Reason for visit"></div>
+<div class="form-group"><label>Notes</label><textarea id="visitNotes" rows="2"></textarea></div>
+<div class="form-actions">
+<button class="btn btn-primary" onclick="saveVisit()">💾 Save</button>
+<button class="btn btn-outline" onclick="closeVisitModal()">Cancel</button>
+</div>
+</div>
+</div>
+
+<!-- Milestone Modal -->
+<div class="modal-overlay" id="milestoneModal">
+<div class="modal">
+<span class="modal-close" onclick="closeMilestoneModal()">&times;</span>
+<h2>👶 Add Milestone</h2>
+<div class="form-group"><label>Milestone Type</label>
+<select id="milestoneType">
+<option value="Rolling over">Rolling over</option>
+<option value="Sitting up">Sitting up</option>
+<option value="Crawling">Crawling</option>
+<option value="Standing">Standing</option>
+<option value="Walking">Walking</option>
+<option value="First word">First word</option>
+<option value="First smile">First smile</option>
+<option value="First tooth">First tooth</option>
+<option value="Waving">Waving</option>
+<option value="Clapping">Clapping</option>
+<option value="Pointing">Pointing</option>
+<option value="Saying mama/dada">Saying mama/dada</option>
+<option value="Following instructions">Following instructions</option>
+<option value="Self-feeding">Self-feeding</option>
+<option value="Potty training">Potty training</option>
+</select></div>
+<div class="form-group"><label>Date</label><input type="date" id="milestoneDate"></div>
+<div class="form-group"><label>Photo (optional)</label><input type="file" id="milestonePhoto" accept="image/*"></div>
+<div class="form-actions">
+<button class="btn btn-primary" onclick="saveMilestone()">💾 Save</button>
+<button class="btn btn-outline" onclick="closeMilestoneModal()">Cancel</button>
+</div>
+</div>
+</div>
+
+<!-- Family Link Modal -->
+<div class="modal-overlay" id="familyModal">
+<div class="modal">
+<span class="modal-close" onclick="closeFamilyModal()">&times;</span>
+<h2>👨‍👩‍👧 Share with Family</h2>
+<div class="form-group"><label>Family Member Name</label><input id="familyName" placeholder="e.g. Nani"></div>
+<div class="form-group"><label>Relationship</label>
+<select id="familyRelation">
+<option value="Grandmother">Grandmother</option>
+<option value="Grandfather">Grandfather</option>
+<option value="Aunt">Aunt</option>
+<option value="Uncle">Uncle</option>
+<option value="Cousin">Cousin</option>
+<option value="Other">Other</option>
+</select></div>
+<div class="form-actions">
+<button class="btn btn-primary" onclick="generateFamilyLink()">🔗 Generate Link</button>
+<button class="btn btn-outline" onclick="closeFamilyModal()">Cancel</button>
+</div>
+</div>
+</div>
+
+<script>
+// ============== UTILITY ==============
+function esc(s) { if (!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'); }
+function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(t._hide); t._hide = setTimeout(() => t.classList.remove('show'), 2500); }
+function randomBars(count) { const bars = []; for (let i = 0; i < count; i++) bars.push(Math.floor(Math.random() * 28) + 4); return bars; }
+function applyWave(el, bars) { el.innerHTML = bars.map(h => `<div class="bar" style="height:${h}px"></div>`).join(''); }
+
+function api(path, opts = {}) {
+  const headers = {};
+  if (!(opts.body instanceof FormData)) headers['Content-Type'] = 'application/json';
+  const token = localStorage.getItem('littlelife_token');
+  if (token) headers['Authorization'] = 'Bearer ' + token;
+  return fetch(path, {
+    method: opts.method || (opts.body ? 'POST' : 'GET'),
+    headers,
+    body: opts.body instanceof FormData ? opts.body : (opts.body ? JSON.stringify(opts.body) : undefined)
+  }).then(r => {
+    if (r.status === 401) { localStorage.removeItem('littlelife_token'); showToast('Session expired'); checkAuth(); throw new Error('Unauthorized'); }
+    if (!r.ok) return r.text().then(t => { throw new Error(t || r.statusText); });
+    const ct = r.headers.get('content-type') || '';
+    if (ct.includes('application/json')) return r.json();
+    return r.text();
+  });
+}
+
+// ============== STATE ==============
+let state = {
+  user: null, kids: [], currentKidId: localStorage.getItem('littlelife_kid') || '',
+  currentTab: 'dashboard', dailySelectedMood: '',
+  echoes: [], dailies: [], growthRecords: [], teethRecords: [], photos: [], arts: [],
+  readings: [], vaccines: [], visits: [], milestones: [], familyLinks: [], achievements: [], echoDash: null, echoTags: [],
+  dashboard: null,
+  recording: null, audioChunks: [], recordingTimer: null,
+  readingAudioBlob: null, readingSelectedEmoji: '😍'
+};
+
+// ============== AUTH ==============
+function switchAuthTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+  document.getElementById('authError').style.display = 'none';
+  if (tab === 'login') { document.querySelector('.auth-tab:first-child').classList.add('active'); document.getElementById('loginForm').classList.add('active'); }
+  else { document.querySelector('.auth-tab:last-child').classList.add('active'); document.getElementById('signupForm').classList.add('active'); }
+}
+
+function showAuthError(msg) { const el = document.getElementById('authError'); el.textContent = msg; el.style.display = 'block'; }
+function showAuthSuccess(msg) { const el = document.getElementById('authSuccess'); el.textContent = msg; el.style.display = 'block'; }
+
+function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  if (!email || !password) { showAuthError('Please fill in all fields'); return; }
+  document.getElementById('authError').style.display = 'none';
+  api('/api/auth/login', { body: { email, password } }).then(res => {
+    localStorage.setItem('littlelife_token', res.token);
+    state.user = { _id: res._id, email: res.email, name: res.name };
+    document.getElementById('authOverlay').classList.add('hidden');
+    document.getElementById('userInfo').style.display = 'flex';
+    document.getElementById('userNameDisplay').textContent = res.name;
+    init();
+  }).catch(e => showAuthError(e.message || 'Login failed'));
+}
+
+function doSignup() {
+  const name = document.getElementById('signupName').value.trim();
+  const email = document.getElementById('signupEmail').value.trim();
+  const password = document.getElementById('signupPassword').value;
+  if (!name || !email || !password) { showAuthError('Please fill in all fields'); return; }
+  if (password.length < 6) { showAuthError('Password must be at least 6 characters'); return; }
+  document.getElementById('authError').style.display = 'none';
+  api('/api/auth/signup', { body: { name, email, password } }).then(res => {
+    localStorage.setItem('littlelife_token', res.token);
+    state.user = { _id: res._id, email: res.email, name: res.name };
+    document.getElementById('authOverlay').classList.add('hidden');
+    document.getElementById('userInfo').style.display = 'flex';
+    document.getElementById('userNameDisplay').textContent = res.name;
+    showToast('Welcome ' + res.name + '! 🎉');
+    init();
+  }).catch(e => showAuthError(e.message || 'Signup failed'));
+}
+
+function doLogout() {
+  localStorage.removeItem('littlelife_token');
+  localStorage.removeItem('littlelife_kid');
+  state.user = null;
+  state.kids = [];
+  state.currentKidId = '';
+  document.getElementById('authOverlay').classList.remove('hidden');
+  document.getElementById('userInfo').style.display = 'none';
+  document.getElementById('settingsModal').classList.remove('open');
+}
+
+function checkAuth() {
+  const token = localStorage.getItem('littlelife_token');
+  if (!token) { document.getElementById('authOverlay').classList.remove('hidden'); document.getElementById('userInfo').style.display = 'none'; return; }
+  api('/api/auth/me').then(user => {
+    if (user) {
+      state.user = user;
+      document.getElementById('authOverlay').classList.add('hidden');
+      document.getElementById('userInfo').style.display = 'flex';
+      document.getElementById('userNameDisplay').textContent = user.name;
+      init();
+    } else {
+      localStorage.removeItem('littlelife_token');
+      document.getElementById('authOverlay').classList.remove('hidden');
+      document.getElementById('userInfo').style.display = 'none';
+    }
+  }).catch(() => {
+    document.getElementById('authOverlay').classList.remove('hidden');
+    document.getElementById('userInfo').style.display = 'none';
+  });
+}
+
+// ============== THEME ==============
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  localStorage.setItem('littlelife_theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeToggle').classList.toggle('active', !isDark);
+}
+function initTheme() {
+  const saved = localStorage.getItem('littlelife_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', saved);
+  document.getElementById('themeToggle').classList.toggle('active', saved === 'dark');
+}
+
+// ============== KID MANAGEMENT ==============
+function loadKids() {
+  return api('/api/kids').then(kids => {
+    state.kids = kids || [];
+    const sel = document.getElementById('kidSelect');
+    const editSel = document.getElementById('editKidSelect');
+    sel.innerHTML = '<option value="">Select child...</option>';
+    editSel.innerHTML = '<option value="">Edit existing...</option>';
+    state.kids.forEach(k => {
+      sel.innerHTML += `<option value="${k._id}">${esc(k.name)}</option>`;
+      editSel.innerHTML += `<option value="${k._id}">${esc(k.name)}</option>`;
+    });
+    if (state.currentKidId && state.kids.find(k => k._id === state.currentKidId)) {
+      sel.value = state.currentKidId;
+    } else {
+      state.currentKidId = '';
+      if (state.kids.length === 1) { state.currentKidId = state.kids[0]._id; sel.value = state.currentKidId; }
+      else localStorage.removeItem('littlelife_kid');
+    }
+    renderKidList();
+    return kids;
+  });
+}
+function switchKid(id) {
+  state.currentKidId = id;
+  if (id) localStorage.setItem('littlelife_kid', id);
+  else localStorage.removeItem('littlelife_kid');
+  loadCurrentTab();
+}
+function saveKid() {
+  const name = document.getElementById('kidNameInput').value.trim();
+  const birthDate = document.getElementById('kidDobInput').value;
+  if (!name) { showToast('Please enter a name'); return; }
+  const editId = document.getElementById('editKidSelect').value;
+  const promise = editId ? api('/api/kids/'+editId, { method:'PUT', body:{ name, birthDate } }) : api('/api/kids', { body: { name, birthDate } });
+  promise.then(() => {
+    document.getElementById('kidNameInput').value = '';
+    document.getElementById('kidDobInput').value = '';
+    document.getElementById('editKidSelect').value = '';
+    showToast(editId ? 'Child updated!' : 'Child added!');
+    return loadKids();
+  }).catch(e => showToast('Error: '+e.message));
+}
+function populateKidEdit() {
+  const id = document.getElementById('editKidSelect').value;
+  if (!id) return;
+  const kid = state.kids.find(k => k._id === id);
+  if (kid) { document.getElementById('kidNameInput').value = kid.name; document.getElementById('kidDobInput').value = kid.birthDate ? kid.birthDate.slice(0,10) : ''; }
+}
+function renderKidList() {
+  const el = document.getElementById('kidList');
+  if (!state.kids.length) { el.innerHTML = '<p style="color:var(--text3);font-size:.85rem">No children added yet.</p>'; return; }
+  el.innerHTML = state.kids.map(k => `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:.85rem">
+      <span>${esc(k.name)} ${k.birthDate ? '<span style="color:var(--text3)">('+k.birthDate.slice(0,10)+')</span>' : ''}</span>
+      <button class="btn btn-sm btn-outline" onclick="deleteKid('${k._id}')">🗑️</button>
+    </div>
+  `).join('');
+}
+function deleteKid(id) {
+  if (!confirm('Delete this child and ALL their data?')) return;
+  api('/api/kids/'+id, { method: 'DELETE' }).then(() => { showToast('Child deleted'); loadKids(); switchTab('dashboard'); }).catch(e => showToast('Error'));
+}
+function getKidName() { const kid = state.kids.find(k => k._id === state.currentKidId); return kid ? kid.name : 'Unknown'; }
+
+// ============== TAB SYSTEM ==============
+function switchTab(tab) {
+  state.currentTab = tab;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-'+tab).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const navItem = document.querySelector(`.nav-item[data-tab="${tab}"]`);
+  if (navItem) navItem.classList.add('active');
+  const fab = document.getElementById('fabRecord');
+  fab.classList.toggle('hidden', tab !== 'echo');
+  loadCurrentTab();
+}
+function loadCurrentTab() {
+  if (!state.currentKidId) {
+    ['dashboard','echo','daily','growth','teeth','photos','art','reading','medical','milestones','achievements','family'].forEach(t => {
+      const el = document.getElementById(t+'Content');
+      if (el) el.innerHTML = '<div class="empty-state"><div class="empty-icon">👶</div><p>Select a child to view this section</p></div>';
+    });
+    return;
+  }
+  switch (state.currentTab) {
+    case 'dashboard': loadDashboard(); break;
+    case 'echo': loadEcho(); break;
+    case 'daily': loadDaily(); break;
+    case 'growth': loadGrowth(); break;
+    case 'teeth': loadTeeth(); break;
+    case 'photos': loadPhotos(); break;
+    case 'art': loadArt(); break;
+    case 'reading': loadReading(); break;
+    case 'medical': loadMedical(); break;
+    case 'milestones': loadMilestonesTab(); break;
+    case 'achievements': loadAchievements(); break;
+    case 'family': loadFamily(); break;
+  }
+}
+
+// ============== DASHBOARD ==============
+function loadDashboard() {
+  const el = document.getElementById('dashContent');
+  api('/api/dashboard/'+state.currentKidId).then(d => {
+    state.dashboard = d;
+    const last = d.lastVoice;
+    el.innerHTML = `
+      <div style="margin-bottom:16px;font-size:.9rem;color:var(--text2)">${esc(getKidName())} ${d.kidAge ? '&middot; '+esc(d.kidAge) : ''}</div>
+      <div class="dash-cards">
+        <div class="dash-card" onclick="switchTab('echo')"><div class="dash-num">${d.voiceCount||0}</div><div class="dash-label">Echoes</div></div>
+        <div class="dash-card" onclick="switchTab('daily')"><div class="dash-num">${d.dailyCount||0}</div><div class="dash-label">Daily Logs</div></div>
+        <div class="dash-card" onclick="switchTab('growth')"><div class="dash-num">${d.growthCount||0}</div><div class="dash-label">Growth</div></div>
+        <div class="dash-card" onclick="switchTab('teeth')"><div class="dash-num">${d.teethCount||0}</div><div class="dash-label">Teeth</div></div>
+        <div class="dash-card" onclick="switchTab('photos')"><div class="dash-num">${d.photoCount||0}</div><div class="dash-label">Photos</div></div>
+        <div class="dash-card" onclick="switchTab('art')"><div class="dash-num">${d.artCount||0}</div><div class="dash-label">Artworks</div></div>
+        <div class="dash-card" onclick="switchTab('reading')"><div class="dash-num">${d.readingCount||0}</div><div class="dash-label">Books</div></div>
+        <div class="dash-card" onclick="switchTab('milestones')"><div class="dash-num">${d.milestoneCount||0}</div><div class="dash-label">Milestones</div></div>
+        <div class="dash-card" onclick="switchTab('achievements')"><div class="dash-num">${d.earnedAchievements||0}</div><div class="dash-label">Awards 🏆</div></div>
+      </div>
+      ${last ? `
+        <div class="card" onclick="viewEchoDetail('${last._id}')" style="cursor:pointer">
+          <h3>🎙️ Latest Echo</h3>
+          <div class="echo-date">${new Date(last.createdAt).toLocaleDateString()}</div>
+          <div class="echo-text" style="-webkit-line-clamp:3">${esc(last.transcription||'Voice note')}</div>
+          ${last.audioUrl ? '<audio controls src="'+last.audioUrl+'" style="width:100%;height:36px;margin-top:8px" preload="none"></audio>' : ''}
+        </div>` : ''}
+      ${(!d.voiceCount&&!d.photoCount&&!d.milestoneCount) ? '<div class="empty-state"><div class="empty-icon">✨</div><p>Start adding memories! Record your first echo, upload a photo, or log a milestone.</p></div>' : ''}
+    `;
+  }).catch(e => { el.innerHTML = '<div class="empty-state"><p>Error loading dashboard</p></div>'; });
+}
+
+// ============== ECHO ==============
+let echoTagFilter = '';
+let echoSearchQuery = '';
+
+function loadEcho() {
+  const el = document.getElementById('echoContent');
+  const kidId = state.currentKidId;
+  if (!kidId) { el.innerHTML = '<div class="empty-state"><div class="empty-icon">🎙️</div><p>Select a child</p></div>'; return; }
+  Promise.all([
+    api('/api/echo/dashboard/'+kidId).catch(() => ({})),
+    api('/api/echo/tags/'+kidId).catch(() => []),
+    api('/api/echo/milestones/'+kidId).catch(() => ({}))
+  ]).then(([dash, tags, milestones]) => {
+    state.echoDash = dash;
+    state.echoTags = tags || [];
+    el.innerHTML = `
+      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+        <input type="text" id="echoSearch" placeholder="Search echoes..." oninput="filterEchoes()" style="flex:1;min-width:120px">
+        <select id="echoTagFilter" onchange="filterEchoes()" style="max-width:140px">
+          <option value="">All tags</option>
+          ${(tags||[]).map(t => `<option value="${esc(t.tag)}">${esc(t.tag)}</option>`).join('')}
+        </select>
+        <button class="btn btn-sm btn-outline" onclick="document.getElementById('echoSearch').value='';filterEchoes()">Clear</button>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;font-size:.8rem;color:var(--text2)">
+        <span>🎙️ ${dash.totalEntries||0} entries</span>
+        <span>🔤 ${dash.uniqueWords||0} words</span>
+        <span>💖 ${dash.favoriteCount||0} favorites</span>
+        ${dash.streak ? '<span>🔥 '+dash.streak+' day streak</span>' : ''}
+      </div>
+      <div id="echoTimeline"><div class="empty-state"><p>Loading...</p></div></div>
+    `;
+    filterEchoes();
+    if (milestones && milestones.milestones && milestones.milestones.length) {
+      const m = milestones;
+      el.innerHTML += `
+        <div class="card">
+          <h3>🎯 Echo Milestones</h3>
+          ${m.milestones.slice(0,7).map(ms => `
+            <div class="timeline-item">
+              <div class="timeline-icon">${ms.icon||'🎯'}</div>
+              <div>
+                <strong>${esc(ms.label)}</strong>
+                <div style="font-size:.75rem;color:var(--text3)">${new Date(ms.date).toLocaleDateString()}</div>
+                <div style="font-size:.8rem;color:var(--text2)">${esc(ms.transcription||'')}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>`;
+    }
+  }).catch(e => { el.innerHTML = '<div class="empty-state"><p>Error</p></div>'; });
+}
+
+function filterEchoes() {
+  const q = document.getElementById('echoSearch')?.value?.toLowerCase() || '';
+  const tag = document.getElementById('echoTagFilter')?.value || '';
+  const kidId = state.currentKidId;
+  api('/api/echo?kidId='+kidId+(tag?'&tag='+encodeURIComponent(tag):'')+(q?'&search='+encodeURIComponent(q):'')).then(entries => {
+    state.echoes = entries || [];
+    const el = document.getElementById('echoTimeline');
+    el.innerHTML = state.echoes.length ? state.echoes.map(e => `
+      <div class="echo-entry" onclick="viewEchoDetail('${e._id}')">
+        <div style="display:flex;justify-content:space-between">
+          <div class="echo-date">${new Date(e.createdAt).toLocaleDateString()} ${e.age ? '('+esc(e.age)+')' : ''}</div>
+          <div style="display:flex;gap:4px">
+            ${e.isFavorite ? '<span style="font-size:.8rem">💖</span>' : ''}
+            ${e.language && e.language !== 'any' ? '<span class="tag">'+esc(e.language)+'</span>' : ''}
+          </div>
+        </div>
+        <div class="echo-text">${esc(e.transcription||'🎧 No transcript')}</div>
+        <div class="echo-meta">
+          ${e.tags && e.tags.length ? e.tags.map(t => '<span class="tag">'+esc(t)+'</span>').join('') : ''}
+          ${e.reactions && e.reactions.length ? '<span style="font-size:.8rem">'+e.reactions.join(' ')+'</span>' : ''}
+          <span style="font-size:.75rem;color:var(--text3)">${e.duration ? Math.round(e.duration)+'s' : ''} ${e.wordCount ? '&middot; '+e.wordCount+' words' : ''}</span>
+        </div>
+        ${e.audioUrl ? '<audio controls src="'+esc(e.audioUrl)+'" style="width:100%;height:32px;margin-top:6px" preload="none"></audio>' : ''}
+      </div>
+    `).join('') : '<div class="empty-state"><div class="empty-icon">🎙️</div><p>No echoes yet. Press the 🎙️ button to record!</p></div>';
+  }).catch(() => {});
+}
+
+function viewEchoDetail(id) {
+  const e = state.echoes.find(x => x._id === id);
+  if (!e) return;
+  const el = document.getElementById('echoDetailContent');
+  el.innerHTML = `
+    <h2>🎙️ Echo Detail</h2>
+    <div class="echo-date" style="margin-bottom:4px">${new Date(e.createdAt).toLocaleDateString('en',{weekday:'long',month:'long',day:'numeric',year:'numeric'})} ${e.age ? '('+esc(e.age)+')' : ''}</div>
+    <div style="font-size:1.2rem;font-family:var(--font-serif);margin-bottom:12px">"${esc(e.transcription||'🎧')}"</div>
+    ${e.note ? '<p style="font-size:.85rem;color:var(--text2);margin-bottom:12px">'+esc(e.note)+'</p>' : ''}
+    ${e.audioUrl ? '<audio controls src="'+esc(e.audioUrl)+'" style="width:100%;margin-bottom:12px" preload="metadata"></audio>' : ''}
+    ${e.photoUrl ? '<img src="'+esc(e.photoUrl)+'" style="max-height:250px;width:100%;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:12px">' : ''}
+    <div class="echo-meta" style="margin-bottom:12px">
+      ${e.tags && e.tags.length ? e.tags.map(t => '<span class="tag">'+esc(t)+'</span>').join('') : ''}
+      ${e.language && e.language !== 'any' ? '<span class="tag">'+esc(e.language)+'</span>' : ''}
+      <span style="font-size:.75rem;color:var(--text3)">${e.duration ? Math.round(e.duration)+'s' : ''} ${e.wordCount ? '&middot; '+e.wordCount+' words' : ''}</span>
+    </div>
+    ${e.isFavorite ? '<div style="font-size:.85rem;color:var(--primary);margin-bottom:12px">💖 Favorite</div>' : ''}
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-sm btn-outline" onclick="toggleFavorite('${e._id}')">${e.isFavorite ? '💔 Unfavorite' : '💖 Favorite'}</button>
+      <button class="btn btn-sm btn-outline" onclick="deleteEcho('${e._id}')">🗑️ Delete</button>
+    </div>
+  `;
+  document.getElementById('echoDetailModal').classList.add('open');
+}
+
+function closeEchoDetail() { document.getElementById('echoDetailModal').classList.remove('open'); }
+function toggleFavorite(id) {
+  const e = state.echoes.find(x => x._id === id);
+  if (!e) return;
+  api('/api/echo/'+id, { method:'PUT', body:{ isFavorite: !e.isFavorite } }).then(() => { showToast(e.isFavorite ? 'Removed favorite' : 'Added to favorites! 💖'); closeEchoDetail(); loadEcho(); }).catch(e => showToast('Error'));
+}
+function deleteEcho(id) {
+  if (!confirm('Delete this echo?')) return;
+  api('/api/echo/'+id, { method:'DELETE' }).then(() => { showToast('Deleted!'); closeEchoDetail(); loadEcho(); }).catch(e => showToast('Error'));
+}
+
+// Echo Recording
+function openEchoRecorder() {
+  document.getElementById('echoRecorderModal').classList.add('open');
+  document.getElementById('recorderUI').style.display = 'block';
+  document.getElementById('postRecordingUI').style.display = 'none';
+  document.getElementById('echoTranscript').value = '';
+  document.getElementById('echoTags').value = '';
+  document.getElementById('echoPhoto').value = '';
+  document.getElementById('echoFavorite').checked = false;
+  state.recording = null; state.audioChunks = [];
+  document.getElementById('recordingTimer').textContent = '0:00';
+  document.getElementById('recordToggleBtn').textContent = '🔴 Start Recording';
+  applyWave(document.getElementById('recordingWave'), randomBars(30));
+}
+function closeEchoRecorder() {
+  if (state.recording) { state.recording.stop(); state.recording = null; }
+  document.getElementById('echoRecorderModal').classList.remove('open');
+}
+let recSeconds = 0;
+function toggleRecording() {
+  const btn = document.getElementById('recordToggleBtn');
+  if (state.recording) {
+    state.recording.stop();
+    state.recording = null;
+    clearInterval(state.recordingTimer);
+    btn.textContent = '🔴 Start Recording';
+    return;
+  }
+  if (!navigator.mediaDevices) { showToast('Recording not supported in this browser'); return; }
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+    state.recording = new MediaRecorder(stream);
+    state.audioChunks = [];
+    recSeconds = 0;
+    state.recording.ondataavailable = e => { if (e.data.size > 0) state.audioChunks.push(e.data); };
+    state.recording.onstop = () => {
+      stream.getTracks().forEach(t => t.stop());
+      document.getElementById('recorderUI').style.display = 'none';
+      document.getElementById('postRecordingUI').style.display = 'block';
+    };
+    state.recording.start();
+    btn.textContent = '⏹️ Stop';
+    state.recordingTimer = setInterval(() => {
+      recSeconds++;
+      document.getElementById('recordingTimer').textContent = Math.floor(recSeconds/60)+':'+String(recSeconds%60).padStart(2,'0');
+    }, 1000);
+  }).catch(e => showToast('Microphone access denied'));
+}
+function discardEcho() { closeEchoRecorder(); }
+function saveEcho() {
+  const transcription = document.getElementById('echoTranscript').value.trim();
+  const tags = document.getElementById('echoTags').value.trim().split(',').filter(Boolean).map(t => t.trim());
+  const photoFile = document.getElementById('echoPhoto').files[0];
+  const isFavorite = document.getElementById('echoFavorite').checked;
+  if (!state.audioChunks.length && !transcription) { showToast('Record something or add a transcript'); return; }
+  const fd = new FormData();
+  fd.append('kidId', state.currentKidId);
+  fd.append('transcription', transcription || '');
+  fd.append('tags', JSON.stringify(tags));
+  fd.append('note', '');
+  fd.append('duration', String(recSeconds));
+  if (state.audioChunks.length) {
+    const blob = new Blob(state.audioChunks, { type: 'audio/webm' });
+    fd.append('audio', blob, 'recording.webm');
+  }
+  if (photoFile) fd.append('photo', photoFile);
+  api('/api/echo', { method: 'POST', body: fd }).then(() => {
+    showToast('Echo saved! 🎉');
+    closeEchoRecorder();
+    loadEcho();
+  }).catch(e => showToast('Error: '+e.message));
+}
+
+// ============== DAILY LOG ==============
+function loadDaily() {
+  const el = document.getElementById('dailyContent');
+  const kidId = state.currentKidId;
+  if (!kidId) { el.innerHTML = '<div class="empty-state"><div class="empty-icon">📝</div><p>Select a child</p></div>'; return; }
+  api('/api/daily/'+kidId).then(entries => {
+    state.dailies = entries || [];
+    const moods = { '😊':'😊', '😐':'😐', '😢':'😢', '😴':'😴' };
+    el.innerHTML = `
+      <button class="btn btn-primary" onclick="openDailyModal()" style="margin-bottom:16px">📝 Add Today's Log</button>
+      <div id="dailyLogs">
+        ${state.dailies.length ? state.dailies.map(d => `
+          <div class="card" style="padding:14px">
+            <div style="display:flex;justify-content:space-between;align-items:start">
+              <div>
+                <strong>${new Date(d.date).toLocaleDateString()}</strong>
+                ${d.mood ? ' <span style="font-size:1.3rem">'+d.mood+'</span>' : ''}
+              </div>
+              <button class="btn btn-sm btn-outline" onclick="deleteDailyLog('${d._id}')">✕</button>
+            </div>
+            ${d.food ? '<div style="font-size:.85rem;margin-top:6px"><strong>🍽️ Food:</strong> '+esc(d.food)+'</div>' : ''}
+            ${d.sleep ? '<div style="font-size:.85rem"><strong>😴 Sleep:</strong> '+esc(d.sleep)+'</div>' : ''}
+            ${d.notes ? '<p style="font-size:.85rem;color:var(--text2);margin-top:4px">'+esc(d.notes)+'</p>' : ''}
+            ${d.activities && d.activities.length ? '<div style="margin-top:6px">'+d.activities.map(a => '<span class="tag">'+esc(a)+'</span>').join('')+'</div>' : ''}
+          </div>
+        `).join('') : '<div class="empty-state"><div class="empty-icon">📝</div><p>No daily logs yet</p></div>'}
+      </div>
+    `;
+  }).catch(e => { el.innerHTML = '<div class="empty-state"><p>Error</p></div>'; });
+}
+
+function openDailyModal() {
+  document.getElementById('dailyModal').classList.add('open');
+  document.getElementById('dailyDate').valueAsDate = new Date();
+  document.getElementById('dailyFood').value = '';
+  document.getElementById('dailySleep').value = '';
+  document.getElementById('dailyNotes').value = '';
+  document.querySelectorAll('#dailyMoodPicker button').forEach(b => b.classList.remove('selected'));
+}
+function closeDailyModal() { document.getElementById('dailyModal').classList.remove('open'); }
+function selectDailyMood(mood) {
+  state.dailySelectedMood = mood;
+  document.querySelectorAll('#dailyMoodPicker button').forEach(b => b.classList.remove('selected'));
+  document.querySelector(`#dailyMoodPicker button[onclick*="'${mood}'"]`).classList.add('selected');
+}
+function saveDailyLog() {
+  const date = document.getElementById('dailyDate').value;
+  const food = document.getElementById('dailyFood').value.trim();
+  const sleep = document.getElementById('dailySleep').value.trim();
+  const notes = document.getElementById('dailyNotes').value.trim();
+  const mood = state.dailySelectedMood || '';
+  if (!date) { showToast('Select a date'); return; }
+  api('/api/daily/'+state.currentKidId, { body: { date, mood, food, sleep, notes, activities: [] } }).then(() => {
+    showToast('Daily log saved!');
+    closeDailyModal();
+    loadDaily();
+  }).catch(e => showToast('Error'));
+}
+function deleteDailyLog(id) {
+  if (!confirm('Delete this log?')) return;
+  api('/api/daily/'+state.currentKidId+'/'+id, { method:'DELETE' }).then(() => { showToast('Deleted!'); loadDaily(); }).catch(e => showToast('Error'));
+}
+
+// ============== GROWTH ==============
+function loadGrowth() {
+  const el = document.getElementById('growthContent');
+  const kidId = state.currentKidId;
+  if (!kidId) { el.innerHTML = '<div class="empty-state"><div class="empty-icon">📏</div><p>Select a child</p></div>'; return; }
+  api('/api/growth/'+kidId).then(records => {
+    state.growthRecords = records || [];
+    el.innerHTML = `
+      <button class="btn btn-primary" onclick="openGrowthModal()" style="margin-bottom:16px">📏 Add Measurement</button>
+      ${state.growthRecords.length ? `
+        <div class="card">
+          <h3>📈 Growth Chart</h3>
+          <canvas id="growthChart" style="width:100%;height:250px"></canvas>
+        </div>
+        <div id="growthList">
+          ${state.growthRecords.slice(0,20).map(r => `
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:.85rem">
+              <div>
+                <strong>${new Date(r.date).toLocaleDateString()}</strong>
+                <span style="color:var(--text2)"> ${r.height ? r.height+'cm' : ''} ${r.weight ? '| '+r.weight+'kg' : ''} ${r.headCircumference ? '| HC '+r.headCircumference+'cm' : ''}</span>
+                ${r.notes ? '<div style="font-size:.75rem;color:var(--text3)">'+esc(r.notes)+'</div>' : ''}
+              </div>
+              <button class="btn btn-sm btn-outline" onclick="deleteGrowth('${r._id}')">✕</button>
+            </div>
+          `).join('')}
+        </div>` : '<div class="empty-state"><div class="empty-icon">📏</div><p>No growth records yet</p></div>'}
+    `;
+    if (state.growthRecords.length) renderGrowthChart();
+  }).catch(e => { el.innerHTML = '<div class="empty-state"><p>Error</p></div>'; });
+}
+
+function renderGrowthChart() {
+  setTimeout(() => {
+    const canvas = document.getElementById('growthChart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr; canvas.height = 250 * dpr;
+    ctx.scale(dpr, dpr);
+    const w = rect.width, h = 250;
+    ctx.clearRect(0, 0, w, h);
+    const sorted = [...state.growthRecords].filter(r => r.weight || r.height).sort((a,b) => new Date(a.date)-new Date(b.date));
+    if (!sorted.length) return;
+    const pad = { top: 20, bottom: 30, left: 40, right: 20 };
+    const cw = w - pad.left - pad.right, ch = h - pad.top - pad.bottom;
+    const weights = sorted.map(r => r.weight).filter(Boolean);
+    const heights = sorted.map(r => r.height).filter(Boolean);
+    function drawPoints(data, color, label, unit) {
+      if (data.length < 2) return;
+      const min = Math.min(...data), max = Math.max(...data);
+      const range = max - min || 1;
+      const xs = sorted.filter(r => r[label.toLowerCase()] !== undefined);
+      const yd = d => pad.top + ch - ((d - min) / range) * ch;
+      ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = 2;
+      ctx.moveTo(pad.left, yd(xs[0][label.toLowerCase()]));
+      xs.forEach((r, i) => { ctx.lineTo(pad.left + (i/(xs.length-1))*cw, yd(r[label.toLowerCase()])); });
+      ctx.stroke();
+      xs.forEach((r, i) => { ctx.beginPath(); ctx.arc(pad.left+(i/(xs.length-1))*cw, yd(r[label.toLowerCase()]), 3, 0, Math.PI*2); ctx.fillStyle = color; ctx.fill(); });
+    }
+    drawPoints(weights, '#e89c86', 'Weight', 'kg');
+    drawPoints(heights, '#d47a60', 'Height', 'cm');
+    ctx.fillStyle = 'var(--text3)'; ctx.font = '10px Inter'; ctx.textAlign = 'center';
+    sorted.forEach((r, i) => {
+      const x = pad.left + (i/(sorted.length-1))*cw;
+      ctx.fillText(new Date(r.date).toLocaleDateString('en',{month:'short',day:'numeric'}), x, h - 5);
+    });
+  }, 100);
+}
+
+function openGrowthModal() { document.getElementById('growthModal').classList.add('open'); document.getElementById('growthDate').valueAsDate = new Date(); document.getElementById('growthHeight').value = ''; document.getElementById('growthWeight').value = ''; document.getElementById('growthHead').value = ''; document.getElementById('growthNotes').value = ''; }
+function closeGrowthModal() { document.getElementById('growthModal').classList.remove('open'); }
+function saveGrowth() {
+  const date = document.getElementById('growthDate').value;
+  const height = parseFloat(document.getElementById('growthHeight').value) || 0;
+  const weight = parseFloat(document.getElementById('growthWeight').value) || 0;
+  const headCircumference = parseFloat(document.getElementById('growthHead').value) || 0;
+  const notes = document.getElementById('growthNotes').value.trim();
+  if (!date) { showToast('Select a date'); return; }
+  if (!height && !weight) { showToast('Enter at least height or weight'); return; }
+  api('/api/growth/'+state.currentKidId, { body: { date, height, weight, headCircumference, notes } }).then(() => { showToast('Saved!'); closeGrowthModal(); loadGrowth(); }).catch(e => showToast('Error'));
+}
+function deleteGrowth(id) { if (!confirm('Delete?')) return; api('/api/growth/'+state.currentKidId+'/'+id, { method:'DELETE' }).then(() => { showToast('Deleted!'); loadGrowth(); }).catch(e => showToast('Error')); }
+
+// ============== TEETH ==============
+const TEETH_MAP = [
+  {n:'Upper Right Central',s:'upper',p:4},{n:'Upper Left Central',s:'upper',p:5},
+  {n:'Upper Right Lateral',s:'upper',p:3},{n:'Upper Left Lateral',s:'upper',p:6},
+  {n:'Upper Right Canine',s:'upper',p:2},{n:'Upper Left Canine',s:'upper',p:7},
+  {n:'Upper Right 1st Molar',s:'upper',p:1},{n:'Upper Left 1st Molar',s:'upper',p:8},
+  {n:'Upper Right 2nd Molar',s:'upper',p:0},{n:'Upper Left 2nd Molar',s:'upper',p:9},
+  {n:'Lower Right Central',s:'lower',p:4},{n:'Lower Left Central',s:'lower',p:5},
+  {n:'Lower Right Lateral',s:'lower',p:3},{n:'Lower Left Lateral',s:'lower',p:6},
+  {n:'Lower Right Canine',s:'lower',p:2},{n:'Lower Left Canine',s:'lower',p:7},
+  {n:'Lower Right 1st Molar',s:'lower',p:1},{n:'Lower Left 1st Molar',s:'lower',p:8},
+  {n:'Lower Right 2nd Molar',s:'lower',p:0},{n:'Lower Left 2nd Molar',s:'lower',p:9}
+];
+
+function loadTeeth() {
+  const el = document.getElementById('teethContent');
+  const kidId = state.currentKidId;
+  if (!kidId) { el.innerHTML = '<div class="empty-state"><div class="empty-icon">🦷</div><p>Select a child</p></div>'; return; }
+  api('/api/teeth/'+kidId).then(records => {
+    state.teethRecords = records || [];
+    const eruptedIds = new Set(state.teethRecords.map(t => t.tooth));
+    const upper = TEETH_MAP.filter(t => t.s === 'upper').sort((a,b)=>b.p-a.p);
+    const lower = TEETH_MAP.filter(t => t.s === 'lower').sort((a,b)=>a.p-b.p);
+    el.innerHTML = `
+      <button class="btn btn-primary" onclick="openToothModal()" style="margin-bottom:16px">🦷 Log Tooth</button>
+      <div class="card">
+        <h3>🦷 Teeth Progress (${eruptedIds.size}/20)</h3>
+        <div style="margin-bottom:12px;height:8px;background:var(--border);border-radius:4px;overflow:hidden">
+          <div style="height:100%;width:${(eruptedIds.size/20)*100}%;background:var(--primary);border-radius:4px;transition:width .3s"></div>
+        </div>
+        <div class="mouth-diagram" style="margin-bottom:8px">
+          ${upper.map(t => `<div class="tooth ${eruptedIds.has(t.n)?'erupted':''}" title="${t.n}">${t.n.split(' ').slice(0,2).join('<br>')}</div>`).join('')}
+        </div>
+        <div class="mouth-diagram">
+          ${lower.map(t => `<div class="tooth ${eruptedIds.has(t.n)?'erupted':''}" title="${t.n}">${t.n.split(' ').slice(0,2).join('<br>')}</div>`).join('')}
+        </div>
+      </div>
+      ${state.teethRecords.length ? `
+        <div id="teethList">
+          ${state.teethRecords.sort((a,b)=>new Date(b.date)-new Date(a.date)).map(r => `
+            <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:.85rem">
+              <div><strong>${esc(r.tooth)}</strong> - ${new Date(r.date).toLocaleDateString()} <span class="tag">${esc(r.type||'erupted')}</span></div>
+              <button class="btn btn-sm btn-outline" onclick="deleteTooth('${r._id}')">✕</button>
+            </div>
+          `).join('')}
+        </div>` : ''}
+    `;
+  }).catch(e => { el.innerHTML = '<div class="empty-state"><p>Error</p></div>'; });
+}
+
+function openToothModal() { document.getElementById('toothModal').classList.add('open'); document.getElementById('toothDate').valueAsDate = new Date(); }
+function closeToothModal() { document.getElementById('toothModal').classList.remove('open'); }
+function saveTooth() {
+  const tooth = document.getElementById('toothSelect').value;
+  const date = document.getElementById('toothDate').value;
+  if (!tooth || !date) { showToast('Select tooth and date'); return; }
+  api('/api/teeth/'+state.currentKidId, { body: { tooth, date, type:'erupted', side:TEETH_MAP.find(t=>t.n===tooth)?.s||'bottom' } }).then(() => { showToast('Tooth logged! 🦷'); closeToothModal(); loadTeeth(); }).catch(e => showToast('Error'));
+}
+function deleteTooth(id) { if (!confirm('Delete?')) return; api('/api/teeth/'+state.currentKidId+'/'+id, { method:'DELETE' }).then(() => { showToast('Deleted!'); loadTeeth(); }).catch(e => showToast('Error')); }
+
+// ============== PHOTOS ==============
+function loadPhotos() {
+  const el = document.getElementById('photosContent');
+  const kidId = state.currentKidId;
+  if (!kidId) { el.innerHTML = '<div class="empty-state"><div class="empty-icon">📸</div><p>Select a child</p></div>'; return; }
+  api('/api/photos/'+kidId).then(photos => {
+    state.photos = photos || [];
+    el.innerHTML = `
+      <button class="btn btn-primary" onclick="openPhotoUpload()" style="margin-bottom:16px">📸 Upload Photo</button>
+      ${state.photos.length ? `
+        <div class="masonry">
+          ${state.photos.map(p => `
+            <div class="masonry-item">
+              <img src="${esc(p.imageUrl)}" alt="${esc(p.caption)}" loading="lazy">
+              ${p.age ? '<div class="age-badge">'+esc(p.age)+'</div>' : ''}
+              ${p.caption ? '<div class="caption">'+esc(p.caption)+'</div>' : ''}
+              <button class="btn btn-sm btn-outline" onclick="deletePhoto('${p._id}')" style="position:absolute;top:8px;left:8px;background:rgba(0,0,0,.4);color:#fff;border:none;padding:2px 8px;font-size:.7rem;border-radius:8px">✕</button>
+            </div>
+          `).join('')}
+        </div>` : '<div class="empty-state"><div class="empty-icon">📸</div><p>No photos yet</p></div>'}
+    `;
+  }).catch(e => { el.innerHTML = '<div class="empty-state"><p>Error</p></div>'; });
+}
+function openPhotoUpload() { document.getElementById('photoUploadModal').classList.add('open'); document.getElementById('photoCaption').value = ''; document.getElementById('photoInput').value = ''; }
+function closePhotoUpload() { document.getElementById('photoUploadModal').classList.remove('open'); }
+function uploadPhoto() {
+  const file = document.getElementById('photoInput').files[0];
+  const caption = document.getElementById('photoCaption').value.trim();
+  if (!file) { showToast('Select a photo'); return; }
+  const fd = new FormData(); fd.append('image', file); fd.append('caption', caption);
+  api('/api/photos/'+state.currentKidId, { method:'POST', body: fd }).then(() => { showToast('Photo uploaded! 📸'); closePhotoUpload(); loadPhotos(); }).catch(e => showToast('Error'));
+}
+function deletePhoto(id) { if (!confirm('Delete?')) return; api('/api/photos/'+state.currentKidId+'/'+id, { method:'DELETE' }).then(() => { showToast('Deleted!'); loadPhotos(); }).catch(e => showToast('Error')); }
+
+// ============== ART ==============
+function loadArt() {
+  const el = document.getElementById('artContent');
+  const kidId = state.currentKidId;
+  if (!kidId) { el.innerHTML = '<div class="empty-state"><div class="empty-icon">🎨</div><p>Select a child</p></div>'; return; }
+  api('/api/art/'+kidId).then(artworks => {
+    state.arts = artworks || [];
+    el.innerHTML = `
+      <button class="btn btn-primary" onclick="openArtUpload()" style="margin-bottom:16px">🎨 Add Artwork</button>
+      ${state.arts.length ? `
+        <div class="masonry">
+          ${state.arts.map(a => `
+            <div class="masonry-item">
+              <img src="${esc(a.imageUrl)}" alt="${esc(a.title)}" loading="lazy">
+              ${a.age ? '<div class="age-badge">'+esc(a.age)+'</div>' : ''}
+              <div style="padding:8px">
+                ${a.title ? '<strong style="font-size:.85rem">'+esc(a.title)+'</strong>' : ''}
+                ${a.description ? '<div style="font-size:.75rem;color:var(--text2)">'+esc(a.description)+'</div>' : ''}
+              </div>
+              <button class="btn btn-sm btn-outline" onclick="deleteArt('${a._id}')" style="position:absolute;top:8px;left:8px;background:rgba(0,0,0,.4);color:#fff;border:none;padding:2px 8px;font-size:.7rem;border-radius:8px">✕</button>
+            </div>
+          `).join('')}
+        </div>` : '<div class="empty-state"><div class="empty-icon">🎨</div><p>No artwork yet</p></div>'}
+    `;
+  }).catch(e => { el.innerHTML = '<div class="empty-state"><p>Error</p></div>'; });
+}
+function openArtUpload() { document.getElementById('artUploadModal').classList.add('open'); document.getElementById('artTitle').value = ''; document.getElementById('artDesc').value = ''; document.getElementById('artInput').value = ''; }
+function closeArtUpload() { document.getElementById('artUploadModal').classList.remove('open'); }
+function uploadArt() {
+  const file = document.getElementById('artInput').files[0];
+  const title = document.getElementById('artTitle').value.trim();
+  const description = document.getElementById('artDesc').value.trim();
+  if (!file) { showToast('Select an artwork image'); return; }
+  const fd = new FormData(); fd.append('image', file); fd.append('title', title); fd.append('description', description);
+  api('/api/art/'+state.currentKidId, { method:'POST', body: fd }).then(() => { showToast('Artwork saved! 🎨'); closeArtUpload(); loadArt(); }).catch(e => showToast('Error'));
+}
+function deleteArt(id) { if (!confirm('Delete?')) return; api('/api/art/'+state.currentKidId+'/'+id, { method:'DELETE' }).then(() => { showToast('Deleted!'); loadArt(); }).catch(e => showToast('Error')); }
+
+// ============== READING ==============
+function loadReading() {
+  const el = document.getElementById('readingContent');
+  const kidId = state.currentKidId;
+  if (!kidId) { el.innerHTML = '<div class="empty-state"><div class="empty-icon">📚</div><p>Select a child</p></div>'; return; }
+  api('/api/reading/'+kidId).then(books => {
+    state.readings = books || [];
+    el.innerHTML = `
+      <button class="btn btn-primary" onclick="openReadingModal()" style="margin-bottom:16px">📚 Log a Book</button>
+      ${state.readings.length ? state.readings.map(r => `
+        <div class="card" style="padding:14px">
+          <div style="display:flex;justify-content:space-between;align-items:start">
+            <div>
+              <strong>${esc(r.bookTitle)}</strong>
+              ${r.author ? '<span style="color:var(--text2);font-size:.85rem"> by '+esc(r.author)+'</span>' : ''}
+            </div>
+            <button class="btn btn-sm btn-outline" onclick="deleteReading('${r._id}')">✕</button>
+          </div>
+          <div style="font-size:.8rem;color:var(--text3);margin-top:4px">${r.date ? new Date(r.date).toLocaleDateString() : ''} ${r.reaction||''}</div>
+          ${r.notes ? '<p style="font-size:.85rem;margin-top:4px">'+esc(r.notes)+'</p>' : ''}
+          ${r.audioUrl ? '<audio controls src="'+esc(r.audioUrl)+'" style="height:36px;width:100%;max-width:300px;margin-top:6px" preload="none"></audio>' : ''}
+        </div>
+      `).join('') : '<div class="empty-state"><div class="empty-icon">📚</div><p>No books logged yet</p></div>'}
+    `;
+  }).catch(e => { el.innerHTML = '<div class="empty-state"><p>Error</p></div>'; });
+}
+function openReadingModal() { document.getElementById('readingModal').classList.add('open'); document.getElementById('readingDate').valueAsDate = new Date(); state.readingSelectedEmoji = '😍'; state.readingAudioBlob = null; document.getElementById('readingRecStatus').textContent = ''; document.querySelectorAll('#readingReactionPicker button').forEach(b => b.classList.remove('selected')); document.querySelector('#readingReactionPicker button:first-child').classList.add('selected'); }
+function closeReadingModal() { document.getElementById('readingModal').classList.remove('open'); }
+function selectReadingEmoji(e) { state.readingSelectedEmoji = e; document.querySelectorAll('#readingReactionPicker button').forEach(b => b.classList.remove('selected')); document.querySelector(`#readingReactionPicker button[onclick*="${e}"]`).classList.add('selected'); }
+let readingRecorder = null; let readingChunks = [];
+function toggleReadingRec() {
+  const btn = document.getElementById('readingRecBtn'); const status = document.getElementById('readingRecStatus');
+  if (readingRecorder) { readingRecorder.stop(); readingRecorder = null; btn.textContent = '🎤 Record'; status.textContent = 'Saved'; return; }
+  if (!navigator.mediaDevices) { showToast('Not supported'); return; }
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+    readingRecorder = new MediaRecorder(stream); readingChunks = [];
+    readingRecorder.ondataavailable = e => { if (e.data.size > 0) readingChunks.push(e.data); };
+    readingRecorder.onstop = () => { stream.getTracks().forEach(t => t.stop()); state.readingAudioBlob = new Blob(readingChunks, { type:'audio/webm' }); };
+    readingRecorder.start(); btn.textContent = '⏹️ Stop'; status.textContent = '🔴 Recording...';
+  }).catch(e => showToast('Mic denied'));
+}
+function saveReading() {
+  const title = document.getElementById('readingTitle').value.trim();
+  if (!title) { showToast('Enter a book title'); return; }
+  const author = document.getElementById('readingAuthor').value.trim();
+  const date = document.getElementById('readingDate').value;
+  const notes = document.getElementById('readingNotes').value.trim();
+  const reaction = state.readingSelectedEmoji;
+  const fd = new FormData(); fd.append('bookTitle', title); fd.append('kidId', state.currentKidId);
+  if (author) fd.append('author', author); if (date) fd.append('date', date); if (notes) fd.append('notes', notes);
+  fd.append('reaction', reaction);
+  if (state.readingAudioBlob) fd.append('audio', state.readingAudioBlob, 'reading.webm');
+  api('/api/reading/'+state.currentKidId, { method:'POST', body: fd }).then(() => { showToast('Book logged!'); closeReadingModal(); document.getElementById('readingTitle').value=''; document.getElementById('readingAuthor').value=''; document.getElementById('readingNotes').value=''; state.readingAudioBlob=null; loadReading(); }).catch(e => showToast('Error'));
+}
+function deleteReading(id) { if (!confirm('Delete?')) return; api('/api/reading/'+state.currentKidId+'/'+id, { method:'DELETE' }).then(() => { showToast('Deleted!'); loadReading(); }).catch(e => showToast('Error')); }
+
+// ============== MEDICAL ==============
+const vaccineSchedule = [
+  { name:'BCG', doses:[{label:'Birth', due:'At birth'}] },
+  { name:'Hep B', doses:[{label:'Dose 1', due:'At birth'},{label:'Dose 2', due:'6 weeks'},{label:'Dose 3', due:'6 months'}] },
+  { name:'OPV', doses:[{label:'Dose 1', due:'6 weeks'},{label:'Dose 2', due:'10 weeks'},{label:'Dose 3', due:'14 weeks'},{label:'Booster', due:'9 months'}] },
+  { name:'Pentavalent', doses:[{label:'Dose 1', due:'6 weeks'},{label:'Dose 2', due:'10 weeks'},{label:'Dose 3', due:'14 weeks'}] },
+  { name:'PCV', doses:[{label:'Dose 1', due:'6 weeks'},{label:'Dose 2', due:'10 weeks'},{label:'Dose 3', due:'14 weeks'},{label:'Booster', due:'9 months'}] },
+  { name:'IPV', doses:[{label:'Dose 1', due:'14 weeks'},{label:'Dose 2', due:'9 months'}] },
+  { name:'Measles', doses:[{label:'Dose 1', due:'9 months'},{label:'Dose 2', due:'15 months'}] },
+  { name:'Typhoid', doses:[{label:'Dose', due:'9 months'}] }
+];
+
+function loadMedical() {
+  const el = document.getElementById('medicalContent');
+  const kidId = state.currentKidId;
+  if (!kidId) { el.innerHTML = '<div class="empty-state"><div class="empty-icon">🏥</div><p>Select a child</p></div>'; return; }
+  Promise.all([api('/api/vaccines/'+kidId).catch(()=>[]), api('/api/visits/'+kidId).catch(()=>[])]).then(([vaccines, visits]) => {
+    state.vaccines = (vaccines && vaccines.records) || [];
+    state.visits = visits || [];
+    const completed = new Set(state.vaccines.map(v => v.vaccine+'|'+v.doseLabel));
+    el.innerHTML = `
+      <div class="card"><h3>💉 EPI Vaccination Schedule (Pakistan)</h3>
+        ${vaccineSchedule.map(v => `
+          <div class="vaccine-group"><h4>${esc(v.name)}</h4>
+            ${v.doses.map((d,i) => {
+              const key = v.name+'|'+d.label;
+              const done = completed.has(key);
+              return `<div class="vaccine-item"><input type="checkbox" id="vac_${i}_${v.name}" ${done?'checked':''} onchange="toggleVaccine('${v.name}','${d.label}',this.checked)"><label for="vac_${i}_${v.name}">${esc(d.label)} <span class="vaccine-dose">(${esc(d.due)})</span></label></div>`;
+            }).join('')}
+          </div>`).join('')}
+      </div>
+      <div class="card"><h3>🏥 Doctor Visits</h3>
+        <button class="btn btn-primary btn-sm" onclick="openVisitModal()" style="margin-bottom:12px">+ Add Visit</button>
+        ${state.visits.length ? state.visits.sort((a,b)=>new Date(b.date)-new Date(a.date)).map(v => `
+          <div style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:start">
+            <div><strong>${new Date(v.date).toLocaleDateString()}</strong> ${v.doctor ? '<span style="color:var(--text2);font-size:.85rem"> — '+esc(v.doctor)+'</span>' : ''} ${v.reason ? '<div style="font-size:.85rem">'+esc(v.reason)+'</div>' : ''} ${v.notes ? '<p style="font-size:.75rem;color:var(--text2)">'+esc(v.notes)+'</p>' : ''}</div>
+            <button class="btn btn-sm btn-outline" onclick="deleteVisit('${v._id}')">✕</button>
+          </div>`).join('') : '<p style="color:var(--text3);font-size:.85rem">No visits recorded</p>'}
+      </div>`;
+  }).catch(e => { el.innerHTML = '<div class="empty-state"><p>Error</p></div>'; });
+}
+
+function toggleVaccine(vaccine, doseLabel, checked) {
+  if (checked) api('/api/vaccines/'+state.currentKidId, { body:{ vaccine, doseLabel, date:new Date().toISOString().slice(0,10) } }).catch(() => showToast('Error'));
+  else { const found = state.vaccines.find(v => v.vaccine === vaccine && v.doseLabel === doseLabel); if (found) api('/api/vaccines/'+state.currentKidId+'/'+found._id, { method:'DELETE' }).catch(() => showToast('Error')); }
+}
+function openVisitModal() { document.getElementById('visitModal').classList.add('open'); document.getElementById('visitDate').valueAsDate = new Date(); document.getElementById('visitDoctor').value=''; document.getElementById('visitReason').value=''; document.getElementById('visitNotes').value=''; }
+function closeVisitModal() { document.getElementById('visitModal').classList.remove('open'); }
+function saveVisit() {
+  const date = document.getElementById('visitDate').value; const doctor = document.getElementById('visitDoctor').value.trim(); const reason = document.getElementById('visitReason').value.trim(); const notes = document.getElementById('visitNotes').value.trim();
+  if (!date) { showToast('Select date'); return; }
+  api('/api/visits/'+state.currentKidId, { body:{ date, doctor, reason, notes } }).then(() => { showToast('Saved!'); closeVisitModal(); loadMedical(); }).catch(e => showToast('Error'));
+}
+function deleteVisit(id) { if (!confirm('Delete?')) return; api('/api/visits/'+state.currentKidId+'/'+id, { method:'DELETE' }).then(() => { showToast('Deleted!'); loadMedical(); }).catch(e => showToast('Error')); }
+function closeVaccineModal() { document.getElementById('vaccineModal').classList.remove('open'); }
+
+// ============== MILESTONES ==============
+function loadMilestonesTab() {
+  const el = document.getElementById('milestonesContent');
+  const kidId = state.currentKidId;
+  if (!kidId) { el.innerHTML = '<div class="empty-state"><div class="empty-icon">👶</div><p>Select a child</p></div>'; return; }
+  api('/api/baby-milestones/'+kidId).then(data => {
+    state.milestones = (data && data.milestones) || [];
+    const grouped = {};
+    state.milestones.forEach(m => { grouped[m.type] = grouped[m.type] || []; grouped[m.type].push(m); });
+    el.innerHTML = `
+      <button class="btn btn-primary" onclick="openMilestoneModal()" style="margin-bottom:16px">👶 Add Milestone</button>
+      ${Object.keys(grouped).length ? Object.entries(grouped).sort().map(([type, items]) => `
+        <div class="card"><h3>🏆 ${esc(type)}</h3>
+          ${items.sort((a,b)=>new Date(b.date)-new Date(a.date)).map(m => `
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
+              <div><span style="font-size:.85rem">${new Date(m.date).toLocaleDateString()} ${m.age ? '('+esc(m.age)+')' : ''}</span> ${m.photoUrl ? '<br><img src="'+esc(m.photoUrl)+'" style="max-height:80px;margin-top:4px;border-radius:6px">' : ''}</div>
+              <button class="btn btn-sm btn-outline" onclick="deleteMilestone('${m._id}')">✕</button>
+            </div>`).join('')}
+        </div>`).join('') : '<div class="empty-state"><div class="empty-icon">👶</div><p>No milestones yet</p></div>'}
+    `;
+  }).catch(e => { el.innerHTML = '<div class="empty-state"><p>Error</p></div>'; });
+}
+function openMilestoneModal() { document.getElementById('milestoneModal').classList.add('open'); document.getElementById('milestoneDate').valueAsDate = new Date(); document.getElementById('milestonePhoto').value = ''; }
+function closeMilestoneModal() { document.getElementById('milestoneModal').classList.remove('open'); }
+function saveMilestone() {
+  const type = document.getElementById('milestoneType').value; const date = document.getElementById('milestoneDate').value; const photoFile = document.getElementById('milestonePhoto').files[0];
+  if (!date) { showToast('Select date'); return; }
+  const fd = new FormData(); fd.append('type',type); fd.append('date',date); fd.append('kidId',state.currentKidId);
+  if (photoFile) fd.append('photo',photoFile);
+  api('/api/baby-milestones/'+state.currentKidId, { method:'POST', body:fd }).then(() => { showToast('Milestone saved! 🎉'); closeMilestoneModal(); loadMilestonesTab(); }).catch(e => showToast('Error'));
+}
+function deleteMilestone(id) { if (!confirm('Delete?')) return; api('/api/baby-milestones/'+state.currentKidId+'/'+id, { method:'DELETE' }).then(() => { showToast('Deleted!'); loadMilestonesTab(); }).catch(e => showToast('Error')); }
+
+// ============== ACHIEVEMENTS ==============
+function loadAchievements() {
+  const el = document.getElementById('achievementsContent');
+  const kidId = state.currentKidId;
+  if (!kidId) { el.innerHTML = '<div class="empty-state"><div class="empty-icon">🏆</div><p>Select a child</p></div>'; return; }
+  api('/api/achievements/'+kidId).then(data => {
+    state.achievements = data.achievements || [];
+    const earned = data.earnedCount || 0;
+    const total = data.totalCount || 0;
+    el.innerHTML = `
+      <div class="ach-progress">${earned} / ${total} achievements earned</div>
+      <div style="margin-bottom:16px;height:8px;background:var(--border);border-radius:4px;overflow:hidden">
+        <div style="height:100%;width:${total ? (earned/total)*100 : 0}%;background:var(--primary);border-radius:4px;transition:width .5s"></div>
+      </div>
+      <div class="ach-grid">
+        ${state.achievements.map(a => `
+          <div class="ach-card ${a.earned ? 'earned' : 'locked'}" title="${esc(a.desc)}">
+            <div class="ach-icon">${a.icon}</div>
+            <div class="ach-label">${esc(a.label)}</div>
+            <div class="ach-desc">${esc(a.desc)}</div>
+          </div>
+        `).join('')}
+      </div>
+      <div style="margin-top:20px;text-align:center;font-size:.85rem;color:var(--text3)">
+        ${earned === total ? '🎉 All achievements unlocked! Amazing parent!' : 'Keep adding memories to unlock more achievements!'}
+      </div>
+    `;
+  }).catch(e => { el.innerHTML = '<div class="empty-state"><p>Error loading achievements</p></div>'; });
+}
+
+// ============== FAMILY ==============
+function loadFamily() {
+  const el = document.getElementById('familyContent');
+  const kidId = state.currentKidId;
+  if (!kidId) { el.innerHTML = '<div class="empty-state"><div class="empty-icon">👨‍👩‍👧</div><p>Select a child</p></div>'; return; }
+  api('/api/family/'+kidId).then(links => {
+    state.familyLinks = links || [];
+    el.innerHTML = `
+      <button class="btn btn-primary" onclick="openFamilyModal()" style="margin-bottom:16px">🔗 Generate Share Link</button>
+      <p style="font-size:.85rem;color:var(--text2);margin-bottom:12px">Share a read-only link with grandparents and family so they can see recent echoes and photos.</p>
+      ${state.familyLinks.length ? state.familyLinks.map(f => `
+        <div class="share-link-card">
+          <div>
+            <strong style="font-size:.9rem">${esc(f.name)}</strong>
+            <span style="font-size:.75rem;color:var(--text3)">(${esc(f.relation||'Family')})</span>
+            <div class="link-url">${window.location.origin}/api/family-view/${esc(f.token)}</div>
+          </div>
+          <div style="display:flex;gap:6px;flex-shrink:0">
+            <button class="btn btn-sm btn-outline" onclick="copyFamilyLink('${f.token}')">📋</button>
+            <button class="btn btn-sm btn-outline" onclick="deleteFamilyLink('${f._id}')">✕</button>
+          </div>
+        </div>
+      `).join('') : '<div class="empty-state"><div class="empty-icon">👨‍👩‍👧</div><p>No family links yet. Generate one to share!</p></div>'}
+    `;
+  }).catch(e => { el.innerHTML = '<div class="empty-state"><p>Error</p></div>'; });
+}
+function openFamilyModal() { document.getElementById('familyModal').classList.add('open'); }
+function closeFamilyModal() { document.getElementById('familyModal').classList.remove('open'); document.getElementById('familyName').value=''; }
+function generateFamilyLink() {
+  const name = document.getElementById('familyName').value.trim();
+  if (!name) { showToast('Enter a name'); return; }
+  const relation = document.getElementById('familyRelation').value;
+  api('/api/family/'+state.currentKidId, { body:{ name, relation } }).then(() => { showToast('Link generated!'); closeFamilyModal(); loadFamily(); }).catch(e => showToast('Error'));
+}
+function copyFamilyLink(token) { navigator.clipboard.writeText(window.location.origin+'/api/family-view/'+token).then(() => showToast('Link copied!')); }
+function deleteFamilyLink(id) { if (!confirm('Remove?')) return; api('/api/family/'+state.currentKidId+'/'+id, { method:'DELETE' }).then(() => { showToast('Removed!'); loadFamily(); }).catch(e => showToast('Error')); }
+
+// ============== SETTINGS ==============
+function toggleSettings() { document.getElementById('settingsModal').classList.toggle('open'); }
+function exportData() {
+  if (!state.currentKidId) { showToast('Select a child first'); return; }
+  const kid = state.kids.find(k => k._id === state.currentKidId);
+  api('/api/echo/dashboard/'+state.currentKidId).then(dash => {
+    const data = { exportDate:new Date().toISOString(), kid: kid ? { name:kid.name, birthDate:kid.birthDate } : {}, echoes:state.echoes, dailies:state.dailies, growth:state.growthRecords, teeth:state.teethRecords, photos:state.photos, art:state.arts, reading:state.readings, vaccines:state.vaccines, visits:state.visits, milestones:state.milestones, family:state.familyLinks };
+    const blob = new Blob([JSON.stringify(data,null,2)], { type:'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href=url; a.download=`littlelife-${kid?kid.name:'export'}-${new Date().toISOString().slice(0,10)}.json`; a.click(); URL.revokeObjectURL(url); showToast('Exported!');
+  });
+}
+
+// ============== DAILY MODAL (needed for daily page) ==============
+// We embed the daily modal HTML dynamically here to keep things simpler - just add it to the body
+(function addDailyModal() {
+  const div = document.createElement('div');
+  div.innerHTML = `
+    <div class="modal-overlay" id="dailyModal">
+      <div class="modal">
+        <span class="modal-close" onclick="closeDailyModal()">&times;</span>
+        <h2>📝 Daily Log</h2>
+        <div class="form-group"><label>Date</label><input type="date" id="dailyDate"></div>
+        <div class="form-group"><label>Mood</label>
+          <div class="emoji-picker" id="dailyMoodPicker">
+            <button onclick="selectDailyMood('😊')">😊</button>
+            <button onclick="selectDailyMood('😐')">😐</button>
+            <button onclick="selectDailyMood('😢')">😢</button>
+            <button onclick="selectDailyMood('😴')">😴</button>
+          </div>
+        </div>
+        <div class="form-group"><label>🍽️ Food</label><input id="dailyFood" placeholder="What did baby eat?"></div>
+        <div class="form-group"><label>😴 Sleep</label><input id="dailySleep" placeholder="Nap times, duration..."></div>
+        <div class="form-group"><label>📝 Notes</label><textarea id="dailyNotes" rows="2"></textarea></div>
+        <div class="form-actions">
+          <button class="btn btn-primary" onclick="saveDailyLog()">💾 Save</button>
+          <button class="btn btn-outline" onclick="closeDailyModal()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(div.firstElementChild);
+})();
+
+// ============== GROWTH MODAL ==============
+(function addGrowthModal() {
+  const div = document.createElement('div');
+  div.innerHTML = `
+    <div class="modal-overlay" id="growthModal">
+      <div class="modal">
+        <span class="modal-close" onclick="closeGrowthModal()">&times;</span>
+        <h2>📏 Add Measurement</h2>
+        <div class="form-group"><label>Date</label><input type="date" id="growthDate"></div>
+        <div class="form-row">
+          <div class="form-group"><label>Height (cm)</label><input type="number" id="growthHeight" step="0.1" placeholder="e.g. 60"></div>
+          <div class="form-group"><label>Weight (kg)</label><input type="number" id="growthWeight" step="0.1" placeholder="e.g. 5.5"></div>
+        </div>
+        <div class="form-group"><label>Head Circumference (cm)</label><input type="number" id="growthHead" step="0.1" placeholder="e.g. 38"></div>
+        <div class="form-group"><label>Notes</label><textarea id="growthNotes" rows="2"></textarea></div>
+        <div class="form-actions">
+          <button class="btn btn-primary" onclick="saveGrowth()">💾 Save</button>
+          <button class="btn btn-outline" onclick="closeGrowthModal()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(div.firstElementChild);
+})();
+
+// ============== TOOTH MODAL ==============
+(function addToothModal() {
+  const div = document.createElement('div');
+  div.innerHTML = `
+    <div class="modal-overlay" id="toothModal">
+      <div class="modal">
+        <span class="modal-close" onclick="closeToothModal()">&times;</span>
+        <h2>🦷 Log Tooth</h2>
+        <div class="form-group"><label>Tooth</label>
+          <select id="toothSelect">
+            ${TEETH_MAP.map(t => `<option value="${esc(t.n)}">${t.n}</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-group"><label>Date Erupted</label><input type="date" id="toothDate"></div>
+        <div class="form-actions">
+          <button class="btn btn-primary" onclick="saveTooth()">💾 Save</button>
+          <button class="btn btn-outline" onclick="closeToothModal()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(div.firstElementChild);
+})();
+
+// ============== INIT ==============
+function init() {
+  initTheme();
+  loadKids().then(() => { loadCurrentTab(); });
+}
+
+checkAuth();
+</script>
+</body>
+</html>
