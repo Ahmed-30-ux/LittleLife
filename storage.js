@@ -12,14 +12,13 @@ async function getStorage() {
   if (store) return store;
 
   if (process.env.VERCEL && (process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID)) {
-    const { put, head } = require('@vercel/blob');
+    const { put, get } = require('@vercel/blob');
     const KEY = 'data.json';
     store = {
       async load() {
         try {
-          const info = await head(KEY);
-          const res = await fetch(info.url);
-          return res.ok ? JSON.parse(await res.text()) : getDefaultData();
+          const blob = await get(KEY);
+          return blob ? JSON.parse(await blob.text()) : getDefaultData();
         } catch { return getDefaultData(); }
       },
       async save(data) {
