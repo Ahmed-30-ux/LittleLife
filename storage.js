@@ -18,14 +18,17 @@ async function getStorage() {
       async load() {
         try {
           const info = await head(BLOB_KEY);
-          if (!info?.downloadUrl) return getDefaultData();
-          const res = await fetch(info.downloadUrl);
+          const res = await fetch(info.url);
           if (!res.ok) return getDefaultData();
           return JSON.parse(await res.text());
         } catch { return getDefaultData(); }
       },
       async save(data) {
-        await put(BLOB_KEY, JSON.stringify(data), { contentType: 'application/json', access: 'private' });
+        await put(BLOB_KEY, JSON.stringify(data), {
+          contentType: 'application/json',
+          access: 'public',
+          allowOverwrite: true
+        });
       }
     };
   } else {
