@@ -12,14 +12,16 @@ async function getStorage() {
   if (store) return store;
   const isVercel = !!process.env.VERCEL;
   if (isVercel) {
-    const { put, get } = await import('@vercel/blob');
+    const { put, head } = require('@vercel/blob');
     const BLOB_KEY = 'data.json';
     store = {
       async load() {
         try {
-          const blob = await get(BLOB_KEY);
-          if (!blob) return getDefaultData();
-          return JSON.parse(await blob.text());
+          const info = await head(BLOB_KEY);
+          if (!info?.downloadUrl) return getDefaultData();
+          const res = await fetch(info.downloadUrl);
+          if (!res.ok) return getDefaultData();
+          return JSON.parse(await res.text());
         } catch { return getDefaultData(); }
       },
       async save(data) {
