@@ -592,7 +592,7 @@ function api(path, opts = {}) {
     headers,
     body: opts.body instanceof FormData ? opts.body : (opts.body ? JSON.stringify(opts.body) : undefined)
   }).then(r => {
-    if (r.status === 401) { if (token) { localStorage.removeItem('littlelife_token'); showToast('Session expired'); checkAuth(); } throw new Error('Unauthorized'); }
+    if (r.status === 401) { if (token) { localStorage.removeItem('littlelife_token'); showToast('Session expired'); checkAuth(); } return r.text().then(t => { throw new Error(t || 'Unauthorized'); }); }
     if (!r.ok) return r.text().then(t => { throw new Error(t || r.statusText); });
     const ct = r.headers.get('content-type') || '';
     if (ct.includes('application/json')) return r.json();
